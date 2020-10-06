@@ -1,0 +1,170 @@
+
+(PDF.4)ATMEGA16_EXERCISE-2.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000000d8  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  0000014c  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000001  00800060  00800060  0000014c  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  0000014c  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  0000017c  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000030  00000000  00000000  000001b8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   0000061d  00000000  00000000  000001e8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 000005a8  00000000  00000000  00000805  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00000239  00000000  00000000  00000dad  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  00000058  00000000  00000000  00000fe8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    00000350  00000000  00000000  00001040  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    00000076  00000000  00000000  00001390  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000020  00000000  00000000  00001406  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   8:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  10:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  14:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  18:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  1c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  20:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  24:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  28:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  2c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  30:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  34:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  38:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  3c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  40:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  44:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  48:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  4c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__vector_19>
+  50:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d4 e0       	ldi	r29, 0x04	; 4
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_clear_bss>:
+  60:	20 e0       	ldi	r18, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	01 c0       	rjmp	.+2      	; 0x6a <.do_clear_bss_start>
+
+00000068 <.do_clear_bss_loop>:
+  68:	1d 92       	st	X+, r1
+
+0000006a <.do_clear_bss_start>:
+  6a:	a1 36       	cpi	r26, 0x61	; 97
+  6c:	b2 07       	cpc	r27, r18
+  6e:	e1 f7       	brne	.-8      	; 0x68 <.do_clear_bss_loop>
+  70:	0e 94 63 00 	call	0xc6	; 0xc6 <main>
+  74:	0c 94 6a 00 	jmp	0xd4	; 0xd4 <_exit>
+
+00000078 <__bad_interrupt>:
+  78:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000007c <__vector_19>:
+#define OVERFLOW_NUM_OF_COUNT 2		//for half a second since we using a prescaler of 1024 to reach an overflow rate of ~0.26s
+
+uint8_t count_tick=0;
+
+ISR(TIMER0_COMP_vect)
+{
+  7c:	1f 92       	push	r1
+  7e:	0f 92       	push	r0
+  80:	0f b6       	in	r0, 0x3f	; 63
+  82:	0f 92       	push	r0
+  84:	11 24       	eor	r1, r1
+  86:	8f 93       	push	r24
+  88:	9f 93       	push	r25
+	count_tick++;
+  8a:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
+  8e:	8f 5f       	subi	r24, 0xFF	; 255
+  90:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <__DATA_REGION_ORIGIN__>
+	if (count_tick==OVERFLOW_NUM_OF_COUNT)
+  94:	82 30       	cpi	r24, 0x02	; 2
+  96:	31 f4       	brne	.+12     	; 0xa4 <__vector_19+0x28>
+	{
+		PORTC^=(1<<PC0);
+  98:	95 b3       	in	r25, 0x15	; 21
+  9a:	81 e0       	ldi	r24, 0x01	; 1
+  9c:	89 27       	eor	r24, r25
+  9e:	85 bb       	out	0x15, r24	; 21
+		count_tick=0;
+  a0:	10 92 60 00 	sts	0x0060, r1	; 0x800060 <__DATA_REGION_ORIGIN__>
+	}
+}
+  a4:	9f 91       	pop	r25
+  a6:	8f 91       	pop	r24
+  a8:	0f 90       	pop	r0
+  aa:	0f be       	out	0x3f, r0	; 63
+  ac:	0f 90       	pop	r0
+  ae:	1f 90       	pop	r1
+  b0:	18 95       	reti
+
+000000b2 <initialize_timer>:
+
+void initialize_timer(uint8_t comp_value)
+{
+	TCCR0=(1<<WGM01);				//Enable timer 0 as CTC mode
+  b2:	98 e0       	ldi	r25, 0x08	; 8
+  b4:	93 bf       	out	0x33, r25	; 51
+	
+	TCCR0=(1<<CS00)|(1<<CS02);		//set the clock prescaler to 1024	
+  b6:	95 e0       	ldi	r25, 0x05	; 5
+  b8:	93 bf       	out	0x33, r25	; 51
+	
+	TCNT0=0x00;						//Zeroing the timer register so it start counting from zero
+  ba:	12 be       	out	0x32, r1	; 50
+	
+	OCR0=comp_value;				//set the output compare register to compare value
+  bc:	8c bf       	out	0x3c, r24	; 60
+	
+	TIMSK|=(1<<OCIE0);				//Enable timer overflow interrupt	
+  be:	89 b7       	in	r24, 0x39	; 57
+  c0:	82 60       	ori	r24, 0x02	; 2
+  c2:	89 bf       	out	0x39, r24	; 57
+  c4:	08 95       	ret
+
+000000c6 <main>:
+}
+
+int main(void)
+{
+	DDRC|=(1<<PC0);					//Enable pin 0 of PORTC as output
+  c6:	a0 9a       	sbi	0x14, 0	; 20
+	PORTC|=(1<<PC0);				//output high
+  c8:	a8 9a       	sbi	0x15, 0	; 21
+	
+	sei();							//Enable the interrupts
+  ca:	78 94       	sei
+	
+	initialize_timer(250);			//initialize the timer by calling it's function
+  cc:	8a ef       	ldi	r24, 0xFA	; 250
+  ce:	0e 94 59 00 	call	0xb2	; 0xb2 <initialize_timer>
+  d2:	ff cf       	rjmp	.-2      	; 0xd2 <main+0xc>
+
+000000d4 <_exit>:
+  d4:	f8 94       	cli
+
+000000d6 <__stop_program>:
+  d6:	ff cf       	rjmp	.-2      	; 0xd6 <__stop_program>
